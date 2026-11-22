@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>初一 C++ 自学手册</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  --ink:#141b2e;--ink2:#4e5a78;--ink3:#8b94ad;
+  --bg:#f3f5fb;--card:#fff;--line:#e4e8f3;
+  --brand:#4a3aff;--brand2:#0fb9a6;--warm:#ff9f43;
+  --code-bg:#1b1f33;--r:18px;
+  --shadow:0 8px 28px rgba(20,27,46,.07);
+}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font-family:"Segoe UI","Microsoft YaHei",system-ui,-apple-system,sans-serif;
+  background:var(--bg);color:var(--ink);line-height:1.78;
+  -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+
+/* ---------- Hero ---------- */
+.hero{
+  position:relative;overflow:hidden;color:#fff;
+  background:
+    radial-gradient(900px 420px at 12% -10%,rgba(74,58,255,.55),transparent 60%),
+    radial-gradient(700px 380px at 88% 0%,rgba(15,185,166,.38),transparent 60%),
+    linear-gradient(160deg,#151a2e,#1d2440 55%,#131830);
+}
+.hero::after{
+  content:"";position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:38px 38px;mask-image:radial-gradient(circle at 50% 0%,#000,transparent 75%);
+  pointer-events:none;
+}
+.hero-inner{position:relative;z-index:2;max-width:1080px;margin:0 auto;padding:56px 26px 44px}
+.badge{
+  display:inline-block;font-size:12.5px;letter-spacing:.12em;
+  padding:6px 14px;border:1px solid rgba(255,255,255,.28);border-radius:999px;
+  color:#c8d0ff;background:rgba(255,255,255,.06);backdrop-filter:blur(6px);
+}
+.hero h1{
+  font-size:clamp(26px,4.2vw,46px);line-height:1.25;margin:18px 0 14px;
+  font-weight:800;letter-spacing:-.5px;max-width:760px;
+  background:linear-gradient(100deg,#fff 20%,#a9b8ff 55%,#7ef0dd 95%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.lead{color:#b9c2e0;max-width:680px;font-size:15.5px;margin:0}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 0}
+.stats>div{
+  flex:1 1 130px;min-width:110px;padding:12px 16px;border-radius:14px;
+  background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+}
+.stats b{display:block;font-size:24px;line-height:1.2;color:#fff}
+.stats span{font-size:12.5px;color:#9fa9cc}
+.progress-wrap{margin-top:26px;max-width:620px}
+.progress-label{display:flex;justify-content:space-between;font-size:12.5px;color:#a8b2d4;letter-spacing:.04em}
+.bar{height:10px;border-radius:999px;background:rgba(255,255,255,.14);overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#6a5bff,#0fb9a6);transition:width .35s ease}
+.hint{font-size:12.5px;color:#98a2c6;margin:10px 0 0}
+
+/* ---------- Layout ---------- */
+.layout{max-width:1180px;margin:0 auto;padding:34px 22px 70px;display:grid;grid-template-columns:224px minmax(0,1fr);gap:30px;align-items:start}
+.nav{
+  position:sticky;top:20px;max-height:calc(100vh - 40px);overflow:auto;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px 12px;box-shadow:var(--shadow);font-size:13.5px;
+}
+.nav-title{font-size:11.5px;letter-spacing:.16em;color:var(--ink3);padding:0 10px 10px;font-weight:700}
+.nav a{
+  display:flex;gap:9px;align-items:baseline;text-decoration:none;color:var(--ink2);
+  padding:7px 10px;border-radius:9px;transition:.16s;
+}
+.nav a b{font-size:11px;color:var(--ink3);font-weight:700;min-width:16px}
+.nav a:hover{background:#f2f4fd;color:var(--brand)}
+.nav a.on{background:linear-gradient(90deg,#efe9ff,#e9fbf8);color:var(--brand);font-weight:600}
+
+/* ---------- Cards ---------- */
+main{min-width:0}
+.card{
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+  padding:26px 28px 22px;margin-bottom:22px;box-shadow:var(--shadow);scroll-margin-top:20px;
+}
+.card-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:6px}
+.num{
+  flex:0 0 auto;width:42px;height:42px;border-radius:13px;display:grid;place-items:center;
+  font-weight:800;font-size:15px;color:#fff;background:linear-gradient(140deg,var(--brand),#7a6bff);
+  box-shadow:0 8px 18px rgba(74,58,255,.28);
+}
+.card-head h2{font-size:20px;margin:4px 0 2px;letter-spacing:-.3px}
+.card-head h2 small{display:block;font-size:12.5px;color:var(--ink3);font-weight:500;letter-spacing:0}
+.done{margin-left:auto;flex:0 0 auto;display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink3);cursor:pointer;user-select:none;white-space:nowrap;padding-top:8px}
+.done input{width:16px;height:16px;accent-color:var(--brand2);cursor:pointer}
+.goal{
+  display:flex;gap:8px;align-items:flex-start;background:#f6f4ff;border:1px dashed #d6cffd;
+  border-radius:12px;padding:10px 14px;font-size:13.5px;color:#4b4373;margin:14px 0 4px;
+}
+.goal b{color:var(--brand)}
+.prose{font-size:15px;color:#2c3348}
+.prose p{margin:12px 0}
+.prose h3{font-size:15.5px;margin:22px 0 8px;color:#1b2340;padding-left:9px;border-left:3px solid var(--brand2)}
+.prose ul,.prose ol{margin:10px 0;padding-left:22px}
+.prose li{margin:6px 0}
+.prose strong{color:#1b2340}
+.mono{font-family:"Cascadia Code",Consolas,monospace;font-size:13px;background:#eef1fa;padding:1px 6px;border-radius:6px;color:#3a3f7a}
+
+/* tips */
+.tip,.warn{
+  border-radius:12px;padding:12px 15px;font-size:13.8px;margin:14px 0;line-height:1.7;
+}
+.tip{background:#eafaf7;border-left:4px solid var(--brand2);color:#115e55}
+.warn{background:#fff5e9;border-left:4px solid var(--warm);color:#7a4a12}
+.tip b,.warn b{display:block;font-size:12px;letter-spacing:.1em;margin-bottom:2px;opacity:.85}
+
+/* code */
+.codebox{background:var(--code-bg);border-radius:14px;overflow:hidden;margin:16px 0;box-shadow:0 12px 26px rgba(15,20,45,.18)}
+.codebar{display:flex;align-items:center;justify-content:space-between;padding:8px 12px 8px 16px;background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.08)}
+.codebar span{font-size:11.5px;letter-spacing:.14em;color:#8b96bd;font-weight:700}
+.copy{
+  font:inherit;font-size:12px;color:#aab3d4;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:4px 12px;cursor:pointer;transition:.15s;
+}
+.copy:hover{color:#fff;border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.16)}
+.copy.ok{color:#7ef0dd;border-color:#7ef0dd}
+pre{margin:0;padding:16px 18px;overflow-x:auto}
+code{font-family:"Cascadia Code",Consolas,"SFMono-Regular",monospace;font-size:13.5px;line-height:1.75;color:#d9dff8;white-space:pre;display:block}
+.c-com{color:#7b86a8;font-style:italic}
+.c-str{color:#8fe6a5}
+.c-pre{color:#ffbe7a}
+.c-num{color:#ffd479}
+.c-kw{color:#8db4ff;font-weight:600}
+.out{background:#eef2fb;border-left:4px solid var(--brand2);border-radius:0 12px 12px 0;padding:10px 16px;margin:12px 0;font-family:Consolas,monospace;font-size:13px;white-space:pre-wrap;color:#2b3450}
+
+/* tables */
+.tbl{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.8px}
+.tbl th,.tbl td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+.tbl th{background:#f7f8fd;color:#333c5c;font-weight:700;font-size:13px}
+.tbl td code, .tbl td .mono{font-size:12.5px}
+
+/* drill */
+details.drill{background:#fbfbfe;border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:16px 0}
+details.drill summary{cursor:pointer;font-size:14px;font-weight:700;color:var(--brand);list-style:none}
+details.drill summary::marker{content:""}
+details.drill summary::before{content:"✎  ";color:var(--brand2)}
+details.drill[open] summary{margin-bottom:8px}
+details.drill .ans{font-size:13.8px;color:var(--ink2)}
+details.drill .ans p{margin:6px 0}
+
+/* quiz */
+.quiz{border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin:14px 0;background:#fdfdff}
+.quiz .q{font-weight:700;font-size:14.5px;margin:0 0 10px;color:#1f2744}
+.opts{display:grid;gap:8px}
+.opt{
+  text-align:left;font:inherit;font-size:13.8px;padding:9px 13px;border-radius:10px;cursor:pointer;
+  border:1px solid var(--line);background:#fff;color:#39405e;transition:.15s;
+}
+.opt:hover{border-color:#c9d1ff;background:#f7f8ff}
+.opt.ok{border-color:#0fb9a6;background:#e8fbf8;color:#0a655c;font-weight:600}
+.opt.bad{border-color:#ff6b81;background:#fff0f2;color:#a32239}
+.fb{font-size:13px;margin:10px 0 0;color:var(--ink3);min-height:0}
+
+/* footer */
+footer{max-width:1180px;margin:0 auto;padding:0 22px 60px;color:var(--ink3);font-size:13px;text-align:center}
+.totop{position:fixed;right:22px;bottom:24px;width:44px;height:44px;border-radius:14px;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow);cursor:pointer;color:var(--brand);font-size:18px;display:grid;place-items:center;opacity:0;pointer-events:none;transition:.2s}
+.totop.show{opacity:1;pointer-events:auto}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;gap:18px;padding:22px 14px 60px}
+  .nav{position:static;max-height:none;display:flex;flex-wrap:wrap;gap:6px;padding:12px}
+  .nav-title{display:none}
+  .nav a{background:#f6f7fd;padding:6px 10px}
+  .card{padding:20px 16px}
+  .hero-inner{padding:40px 18px 34px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="badge">初一 · 零基础 · 可自学</div>
+    <h1>用 8 周，把 C++ 从"看不懂"变成"我能自己写"</h1>
+    <p class="lead">10 章循序渐进 + 40 段可直接复制的代码 + 12 个动手练习 + 3 个完整小项目 + 5 道自测题。不需要任何插件，打开就能学。</p>
+    <div class="stats">
+      <div><b>10</b><span>章课程</span></div>
+      <div><b>40+</b><span>段代码</span></div>
+      <div><b>12</b><span>个练一练</span></div>
+      <div><b>3</b><span>个小项目</span></div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>学习进度</span><span id="progText">0 / 11 章</span></div>
+      <div class="bar"><i id="progBar"></i></div>
+      <p class="hint">每学完一章，勾选章节右上角的「已掌握」，进度会自动保存在本机。</p>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="nav" id="nav">
+    <div class="nav-title">目录</div>
+    <a href="#ch0"><b>00</b>开始之前</a>
+    <a href="#ch1"><b>01</b>装好工具</a>
+    <a href="#ch2"><b>02</b>第一个程序</a>
+    <a href="#ch3"><b>03</b>变量与类型</a>
+    <a href="#ch4"><b>04</b>输入与输出</a>
+    <a href="#ch5"><b>05</b>运算符与坑</a>
+    <a href="#ch6"><b>06</b>判断 if</a>
+    <a href="#ch7"><b>07</b>循环</a>
+    <a href="#ch8"><b>08</b>数组</a>
+    <a href="#ch9"><b>09</b>函数</a>
+    <a href="#ch10"><b>10</b>综合实战</a>
+    <a href="#ch11"><b>附</b>报错与计划</a>
+  </aside>
+
+  <main>
+
+    <!-- ===== 00 ===== -->
+    <section class="card" id="ch0">
+      <div class="card-head">
+        <div class="num">00</div>
+        <div>
+          <h2>开始之前<small>先弄清楚：为什么学、怎么学</small></h2>
+        </div>
+        <label class="done"><input type="checkbox" data-ch="ch0">已掌握</label>
+      </div>
+      <div class="goal"><b>本章目标</b>知道 C++ 是什么、为什么初一就能学，并定下自己的学习节奏。</div>
+
+      <div class="prose">
+        <p>C++ 是一门"和电脑讲道理"的语言。你写下一串指令，电脑就照着一步步执行。它诞生于 1985 年，至今仍是游戏引擎、操作系统、机器人、各种竞赛测评系统的首选语言之一。</p>
+
+        <h3>初一学它，优势在哪</h3>
+        <ul>
+          <li><strong>逻辑训练更早</strong>：C++ 要求你每一步都想清楚，这种"严密的思维习惯"一旦养成，数学、物理都会跟着变好。</li>
+          <li><strong>信息学奥赛入门</strong>：如果你以后想参加 CSP-J/S 之类的比赛，C++ 是唯一的正式语言，早学早轻松。</li>
+          <li><strong>底层知识更牢</strong>：学过 C++ 再去看 Python、Java，会发现它们都"变简单了"。</li>
+        </ul>
+
+        <h3>三件必须先知道的事</h3>
+        <ul>
+          <li><strong>C++ 很"较真"</strong>：少一个分号、用错一个中文括号，程序就罢工。这不是你笨，是语言本身严格。</li>
+          <li><strong>报错是日常</strong>：程序员 70% 的时间在处理报错。看到一堆红字不要慌，先看第一行报错。</li>
+          <li><strong>抄代码 ≠ 学会</strong>：抄完之后必须"改坏它"——把数字换掉、把顺序调换、故意写错——看它怎么崩，才是真懂了。</li>
+        </ul>
+
+        <h3>每天 30 分钟的学习节奏</h3>
+        <ol>
+          <li>读一遍本章（8 分钟）：不用全部记住，先有个印象。</li>
+          <li>把代码原样敲一遍（10 分钟）：亲手敲，不要复制粘贴。</li>
+          <li>运行 + 改动 + 看报错（8 分钟）：换几个数值，删掉一个分号试试。</li>
+          <li>做本章"练一练"（5 分钟）：做不出来就看答案，看懂后关掉再写一次。</li>
+        </ol>
+
+        <div class="tip"><b>小贴士</b>把每章的代码建一个文件夹保存，命名像 <span class="mono">01_hello.cpp</span>、<span class="mono">02_sum.cpp</span>。三个月后回头看，你会惊讶自己走了多远。</div>
+      </div>
+    </section>
+
+    <!-- ===== 01 ===== -->
+    <section class="card" id="ch1">
+      <div class="card-head">
+        <div class="num">01</div>
+        <div>
+          <h2>装好工具<small>把"写代码 → 运行"这条路打通</small></h2>
+        </div>
+        <label class="done"><input type="checkbox" data-ch="ch1">已掌握</label>
+      </div>
+      <div class="goal"><b>本章目标</b>电脑上能编译并运行一个 C++ 程序。</div>
+
+      <div class="prose">
+        <p>C++ 不能"直接打开就运行"，它需要两步：先<strong>编译</strong>（把代码翻译成电脑懂的程序），再<strong>运行</strong>。所以你需要一个"编译器 + 编辑器"的组合。</p>
+
+        <table class="tbl">
+          <tr><th>方案</th><th>适合谁</th><th>优点 / 缺点</th></tr>
+          <tr><td><strong>Dev-C++</strong>（推荐先用）</td><td>完全新手</td><td>自带编译器，装完就能写；界面老气，但够用</td></tr>
+          <tr><td><strong>VS Code + MinGW-w64</strong></td><td>想长期学、要写项目</td><td>界面漂亮、功能强；需要手动配置一次环境变量</td></tr>
+          <tr><td>Visual Studio 社区版</td><td>电脑配置较好</td><td>功能最全；安装包很大（几个 GB）</td></tr>
+        </table>
+
+        <h3>Windows 上的具体步骤（Dev-C++）</h3>
+        <ol>
+          <li>搜索 "Dev-C++ 下载"，下载安装包（约 50 MB）。</li>
+          <li>安装时语言选 <strong>Chinese (Simplified)</strong>，一路"下一步"。</li>
+          <li><strong>安装路径千万不要有中文</strong>，例如 <span class="mono">D:\cpp</span> 就好，别用 <span class="mono">D:\我的软件\</span>。</li>
+          <li>打开软件 → 新建 → 源代码 → 敲代码 → 按 <strong>F11</strong>（编译并运行）。</li>
+        </ol>
+
+        <h3>如果你用命令行（VS Code 方案）</h3>
+        <p>把下面这条命令在代码所在文件夹里执行，就能得到可执行文件。先 <span class="mono">cd</span> 到文件夹，再执行：</p>
+        <div class="codebox">
+          <div class="codebar"><span>PowerShell</span><button class="copy">复制</button></div>
+          <pre><code class="cpp">g++ hello.cpp -o hello.exe
+.\hello.exe</code></pre>
+        </div>
+        <p>第一条是"编译"，第二条是"运行"。如果 <span class="mono">g++</span> 提示"不是内部或外部命令"，说明 MinGW 没加到环境变量，回去补配置。</p>
+
+        <div class="warn"><b>三个最常见的环境坑</b>文件后缀必须是 <span class="mono">.cpp</span>（不是 .txt）；路径别带中文和空格；装了两个编译器时，注意用的是哪一个。</div>
+
+        <details class="drill">
+          <summary>练一练：环境自检</summary>
+          <div class="ans"><p>1. 新建文件 <span class="mono">test.cpp</span>，随便写一行代码，按编译运行。</p>
+          <p>2. 如果弹出黑窗口一闪而过，说明程序运行完了但你没看到结果——这是正常现象，下一章会讲怎么解决。</p>
+          <p>3. 能做到"改一行代码 → 重新运行 → 结果变了"，本章就算过关。</p></div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ===== 02 ===== -->
+    <section class="card" id="ch2">
+      <div class="card-head">
+        <div class="num">02</div>
+        <div>
+          <h2>第一个程序<small>Hello, C++！</small></h2>
+        </div>
+        <label class="done"><input type="checkbox" data-ch="ch2">已掌握</label>
+      </div>
+      <div class="goal"><b>本章目标</b>看懂每一行在干什么，并能改出自己想显示的文字。</div>
+
+      <div class="prose">
+        <p>把下面这段原样敲进编辑器，运行它。</p>
+      </div>
+      <div class="codebox">
+        <div class="codebar"><span>C++ · hello.cpp</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "你好，C++！" &lt;&lt; endl;
+    return 0;
+}</code></pre>
+      </div>
+      <div class="out">你好，C++！</div>
+
+      <div class="prose">
+        <h3>一行一行拆开看</h3>
+        <ul>
+          <li><span class="mono">#include &lt;iostream&gt;</span>：告诉电脑"我要用输入输出的功能"，把工具箱搬进来。</li>
+          <li><span class="mono">using namespace std;</span>：省事的一句话，让我们可以直接写 <span class="mono">cout</span> 而不用写 <span class="mono">std::cout</span>。</li>
+          <li><span class="mono">int main() { }</span>：程序的入口。电脑永远从 <span class="mono">main</span> 的第一行开始执行，必须有且只有一个。</li>
+          <li><span class="mono">cout &lt;&lt; "..."</span>：往屏幕上输出。<span class="mono">&lt;&lt;</span> 可以理解成"把右边的东西推给左边"。</li>
+          <li><span class="mono">endl</span>：换行（end of line）。</li>
+          <li><span class="mono">return 0;</span>：告诉电脑"我正常结束了"。0 表示一切顺利。</li>
+        </ul>
+
+        <div class="warn"><b>新手必踩的 4 个坑</b>
+        ① 分号写成中文的"；"；② 括号是中文全角的"（）"；③ 忘了 <span class="mono">#include</span> 那行；④ 程序一闪而过（在 Dev-C++ 里按 F11 就好了，命令行里加一句 <span class="mono">cin.get();</span> 让它停一下）。</div>
+
+        <h3>动手改一改</h3>
+        <p>试试把输出改成两行，并且算一个算式：</p>
+      </div>
+      <div class="codebox">
+        <div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "我是初一小明" &lt;&lt; endl;
+    cout &lt;&lt; "3 + 5 = " &lt;&lt; 3 + 5 &lt;&lt; endl;
+    return 0;
+}</code></pre>
+      </div>
+      <div class="out">我是初一小明
+3 + 5 = 8</div>
+      <div class="prose">
+        <p>注意第二行：文字要用<strong>双引号</strong>包起来，算式<strong>不要</strong>加引号——加了引号它就被当成文字直接打印了。</p>
+      </div>
+
+      <details class="drill">
+        <summary>练一练：自我介绍</summary>
+        <div class="ans"><p>写一个程序，输出三行：你的名字、你的班级、你的爱好。</p>
+        <p>参考答案：</p>
+        <div class="codebox"><div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "姓名：小明" &lt;&lt; endl;
+    cout &lt;&lt; "班级：初一（3）班" &lt;&lt; endl;
+    cout &lt;&lt; "爱好：打篮球" &lt;&lt; endl;
+    return 0;
+}</code></pre></div></div>
+      </details>
+    </section>
+
+    <!-- ===== 03 ===== -->
+    <section class="card" id="ch3">
+      <div class="card-head">
+        <div class="num">03</div>
+        <div>
+          <h2>变量与数据类型<small>给数据起个名字，装进盒子</small></h2>
+        </div>
+        <label class="done"><input type="checkbox" data-ch="ch3">已掌握</label>
+      </div>
+      <div class="goal"><b>本章目标</b>会用 5 种基本类型声明变量，并知道什么场合用哪种。</div>
+
+      <div class="prose">
+        <p>变量就是一个"贴了名字的盒子"，里面装一个数据。用之前先声明，告诉电脑这个盒子里装什么类型的东西。</p>
+
+        <table class="tbl">
+          <tr><th>类型</th><th>装什么</th><th>例子</th><th>说明</th></tr>
+          <tr><td><span class="mono">int</span></td><td>整数</td><td><span class="mono">int age = 12;</span></td><td>大约能存 ±21 亿</td></tr>
+          <tr><td><span class="mono">double</span></td><td>小数</td><td><span class="mono">double h = 1.58;</span></td><td>日常小数都用它</td></tr>
+          <tr><td><span class="mono">char</span></td><td>单个字符</td><td><span class="mono">char g = 'A';</span></td><td>必须用<strong>单</strong>引号</td></tr>
+          <tr><td><span class="mono">bool</span></td><td>真 / 假</td><td><span class="mono">bool ok = true;</span></td><td>只有 true 和 false</td></tr>
+          <tr><td><span class="mono">string</span></td><td>一串字符</td><td><span class="mono">string n = "小明";</span></td><td>要用 <span class="mono">#include &lt;string&gt;</span></td></tr>
+        </table>
+      </div>
+
+      <div class="codebox">
+        <div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    int age = 12;              // 整数，装年龄
+    double height = 1.58;      // 小数，装身高（米）
+    char grade = 'A';          // 单个字符，单引号
+    bool isStudent = true;     // 真假
+    string name = "小明";       // 字符串，双引号
+
+    cout &lt;&lt; name &lt;&lt; " 今年 " &lt;&lt; age &lt;&lt; " 岁" &lt;&lt; endl;
+    cout &lt;&lt; "身高 " &lt;&lt; height &lt;&lt; " 米，等级 " &lt;&lt; grade &lt;&lt; endl;
+    cout &lt;&lt; "是学生吗：" &lt;&lt; isStudent &lt;&lt; endl;   // 打印 1 表示真，0 表示假
+    return 0;
+}</code></pre>
+      </div>
+      <div class="out">小明 今年 12 岁
+身高 1.58 米，等级 A
+是学生吗：1</div>
+
+      <div class="prose">
+        <h3>取名规则（起名要讲究）</h3>
+        <ul>
+          <li>只能用<strong>字母、数字、下划线</strong>，且不能以数字开头：<span class="mono">num1</span> 可以，<span class="mono">2num</span> 不行。</li>
+          <li>不能用保留字：<span class="mono">int</span>、<span class="mono">for</span>、<span class="mono">if</span> 这些不能当名字。</li>
+          <li>区分大小写：<span class="mono">Age</span> 和 <span class="mono">age</span> 是两个不同的盒子。</li>
+          <li>养成好习惯：名字要有意义，<span class="mono">score</span> 比 <span class="mono">a</span> 好得多。</li>
+        </ul>
+
+        <h3>变量的"改名"与"再赋值"</h3>
+        <p>盒子里的东西可以换：<span class="mono">age = 13;</span> 就是把它改成 13。也可以边声明边算：<span class="mono">int total = 3 + 5;</span>。</p>
+
+        <div class="warn"><b>三个高频坑</b>
+        ① <span class="mono">char c = "A";</span> 用双引号 → 报错，字符必须单引号；
+        ② 声明了但没赋值就直接用 → 结果是垃圾数字；
+        ③ 把小数装进 <span class="mono">int</span>：<span class="mono">int x = 1.8;</span> 会变成 1（小数部分被直接砍掉，不是四舍五入）。</div>
+      </div>
+
+      <details class="drill">
+        <summary>练一练：给自己做张名片</summary>
+        <div class="ans"><p>声明 4 个变量（名字、年龄、身高、是否近视），然后把它们打印成一句话。</p>
+        <p>提示：身高用 double，是否近视用 bool。</p></div>
+      </details>
+    </section>
+
+    <!-- ===== 04 ===== -->
+    <section class="card" id="ch4">
+      <div class="card-head">
+        <div class="num">04</div>
+        <div>
+          <h2>输入与输出<small>让程序和你对话</small></h2>
+        </div>
+        <label class="done"><input type="checkbox" data-ch="ch4">已掌握</label>
+      </div>
+      <div class="goal"><b>本章目标</b>用 cin 接收用户输入，理解 cin 与 getline 的区别。</div>
+
+      <div class="prose">
+        <p><span class="mono">cout</span> 是"往外吐"，<span class="mono">cin</span> 是"往里收"。方向记成箭头：<span class="mono">cout &lt;&lt;</span> 数据流出去，<span class="mono">cin &gt;&gt;</span> 数据流进来。</p>
+      </div>
+      <div class="codebox">
+        <div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int a, b;                                  // 一次声明两个整数
+    cout &lt;&lt; "请输入两个整数（空格隔开）：";
+    cin &gt;&gt; a &gt;&gt; b;                             // 从键盘收两个数
+    cout &lt;&lt; a &lt;&lt; " + " &lt;&lt; b &lt;&lt; " = " &lt;&lt; a + b &lt;&lt; endl;
+    return 0;
+}</code></pre>
+      </div>
+      <div class="out">请输入两个整数（空格隔开）：12 30
+12 + 30 = 42</div>
+
+      <div class="prose">
+        <h3>一个重要的区别：cin 遇到空格就停</h3>
+        <p>如果你输入"小明 爱吃面"，<span class="mono">cin &gt;&gt; name</span> 只会拿到"小明"。想读一整行（含空格），用 <span class="mono">getline</span>：</p>
+      </div>
+      <div class="codebox">
+        <div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;string&gt;
+using namespace std;
+
+int main() {
+    string line;
+    cout &lt;&lt; "说一句你想说的话：";
+    getline(cin, line);            // 读整行，包括空格
+    cout &lt;&lt; "你说的是：" &lt;&lt; line &lt;&lt; endl;
+    return 0;
+}</code></pre>
+      </div>
+
+      <div class="tip"><b>实用技巧</b>提示语后面不要加 <span class="mono">endl</span>，让光标停在同一行，用户直接在你写的字后面输入，体验更好。</div>
+
+      <details class="drill">
+        <summary>练一练：长方形面积计算器</summary>
+        <div class="ans"><p>输入长和宽（可能是小数），输出面积和周长。</p>
+        <div class="codebox"><div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    double w, h;
+    cout &lt;&lt; "宽和高：";
+    cin &gt;&gt; w &gt;&gt; h;
+    cout &lt;&lt; "面积 = " &lt;&lt; w * h &lt;&lt; endl;
+    cout &lt;&lt; "周长 = " &lt;&lt; 2 * (w + h) &lt;&lt; endl;
+    return 0;
+}</code></pre></div></div>
+      </details>
+    </section>
+
+    <!-- ===== 05 ===== -->
+    <section class="card" id="ch5">
+      <div class="card-head">
+        <div class="num">05</div>
+        <div>
+          <h2>运算符与两个大坑<small>算得对，才知道自己错在哪</small></h2>
+        </div>
+        <label class="done"><input type="checkbox" data-ch="ch5">已掌握</label>
+      </div>
+      <div class="goal"><b>本章目标</b>掌握 + - * / % 的用法，能避开"整数除法"和"优先级"这两个坑。</div>
+
+      <div class="prose">
+        <table class="tbl">
+          <tr><th>运算符</th><th>含义</th><th>例子</th><th>结果</th></tr>
+          <tr><td><span class="mono">+ - * /</span></td><td>加减乘除</td><td><span class="mono">7 / 2</span></td><td>3（不是 3.5！）</td></tr>
+          <tr><td><span class="mono">%</span></td><td>求余数</td><td><span class="mono">7 % 2</span></td><td>1</td></tr>
+          <tr><td><span class="mono">+= -=</span></td><td>自己加 / 减</td><td><span class="mono">sum += 3;</span></td><td>等于 sum = sum + 3</td></tr>
+          <tr><td><span class="mono">++ --</span></td><td>加一 / 减一</td><td><span class="mono">i++</span></td><td>i 变成 i + 1</td></tr>
+        </table>
+
+        <h3>坑一：两个整数相除，小数部分直接消失</h3>
+        <p><span class="mono">7 / 2</span> 得到 3，不是 3.5。想让结果是小数，至少让其中一个变成小数：</p>
+      </div>
+      <div class="codebox">
+        <div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int a = 7, b = 2;
+    cout &lt;&lt; a / b &lt;&lt; endl;             // 3   整数除整数 → 整数
+    cout &lt;&lt; (double)a / b &lt;&lt; endl;     // 3.5 先把 a 转成小数再除
+
+    // 摄氏温度转华氏温度：F = C * 9 / 5 + 32
+    double c = 37.0;
+    cout &lt;&lt; c * 9 / 5 + 32 &lt;&lt; endl;    // 因为 c 是小数，整个式子就按小数算
+    return 0;
+}</code></pre>
+      </div>
+      <div class="out">3
+3.5
+98.6</div>
+
+      <div class="prose">
+        <h3>坑二：优先级</h3>
+        <p>和数学一样：先乘除后加减，括号最优先。但 C++ 多了一条<strong>从左到右</strong>的同级顺序，所以 <span class="mono">5 / 2 * 2</span> = 4（先算 5/2=2，再乘 2），而不是 5。不确定就<strong>加括号</strong>，加括号永远不吃亏。</p>
+
+        <div class="warn"><b>注意</b><span class="mono">%</span> 只能用在整数上，<span class="mono">7.5 % 2</span> 会直接编译报错。它的常见用途是判断奇偶（<span class="mono">n % 2 == 0</span> 表示偶数）和取个位数字（<span class="mono">n % 10</span>）。</div>
+      </div>
+
+      <details class="drill">
+        <summary>练一练：秒数换算</summary>
+        <div class="ans"><p>输入一个秒数（比如 3672），输出"几小时几分几秒"（答案：1 小时 1 分 12 秒）。</p>
+        <p>提示：小时 = 秒 / 3600，剩下的用 <span class="mono">%</span> 取。</p>
+        <div class="codebox"><div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int s;
+    cin &gt;&gt; s;
+    int h = s / 3600;
+    int m = s % 3600 / 60;
+    int sec = s % 60;
+    cout &lt;&lt; h &lt;&lt; " 小时 " &lt;&lt; m &lt;&lt; " 分 " &lt;&lt; sec &lt;&lt; " 秒" &lt;&lt; endl;
+    return 0;
+}</code></pre></div></div>
+      </details>
+    </section>
+
+    <!-- ===== 06 ===== -->
+    <section class="card" id="ch6">
+      <div class="card-head">
+        <div class="num">06</div>
+        <div>
+          <h2>判断：if 与 else<small>让程序会"分情况"</small></h2>
+        </div>
+        <label class="done"><input type="checkbox" data-ch="ch6">已掌握</label>
+      </div>
+      <div class="goal"><b>本章目标</b>用 if / else if / else 和逻辑运算符写出多分支判断。</div>
+
+      <div class="prose">
+        <table class="tbl">
+          <tr><th>比较</th><th>含义</th><th>逻辑</th><th>含义</th></tr>
+          <tr><td><span class="mono">==</span></td><td>等于（两个等号！）</td><td><span class="mono">&amp;&amp;</span></td><td>并且（两边都要真）</td></tr>
+          <tr><td><span class="mono">!=</span></td><td>不等于</td><td><span class="mono">||</span></td><td>或者（一边真就行）</td></tr>
+          <tr><td><span class="mono">&gt; &lt; &gt;= &lt;=</span></td><td>大于 / 小于 / 不小于…</td><td><span class="mono">!</span></td><td>取反</td></tr>
+        </table>
+      </div>
+      <div class="codebox">
+        <div class="codebar"><span>C++ · 成绩等级</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int score;
+    cout &lt;&lt; "输入分数：";
+    cin &gt;&gt; score;
+
+    if (score &gt;= 90) {
+        cout &lt;&lt; "优秀" &lt;&lt; endl;
+    } else if (score &gt;= 75) {
+        cout &lt;&lt; "良好" &lt;&lt; endl;
+    } else if (score &gt;= 60) {
+        cout &lt;&lt; "及格" &lt;&lt; endl;
+    } else {
+        cout &lt;&lt; "要加油" &lt;&lt; endl;
+    }
+
+    // 组合条件：60 分以上并且是偶数
+    if (score &gt;= 60 &amp;&amp; score % 2 == 0) {
+        cout &lt;&lt; "这个分数还挺巧" &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre>
+      </div>
+
+      <div class="prose">
+        <h3>代码的执行顺序</h3>
+        <p>if 从上往下判断，<strong>一旦有一个成立，后面的分支全部跳过</strong>。所以上面那串判断之所以能写"只写下限"，是因为前面的条件已经挡住了更高的分数。</p>
+
+        <div class="warn"><b>两个致命坑</b>
+        ① <span class="mono">if (score = 60)</span> 用了一个等号 → 这是赋值，条件永远为真，还不报错；
+        ② <span class="mono">if (score &gt; 60);</span> 多写了一个分号 → if 后面变成了空语句，后面的大括号跟它没关系了。</div>
+
+        <div class="tip"><b>小技巧</b>单行语句可以省掉大括号，但<strong>建议永远写大括号</strong>。以后加第二行代码时忘了补括号，是很难查的 bug。</div>
+      </div>
+
+      <details class="drill">
+        <summary>练一练：闰年判断</summary>
+        <div class="ans"><p>输入年份，判断是否闰年。规则：能被 4 整除但不能被 100 整除，或者能被 400 整除。</p>
+        <div class="codebox"><div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int y;
+    cin &gt;&gt; y;
+    if ((y % 4 == 0 &amp;&amp; y % 100 != 0) || y % 400 == 0)
+        cout &lt;&lt; "是闰年" &lt;&lt; endl;
+    else
+        cout &lt;&lt; "不是闰年" &lt;&lt; endl;
+    return 0;
+}</code></pre></div></div>
+      </details>
+    </section>
+
+    <!-- ===== 07 ===== -->
+    <section class="card" id="ch7">
+      <div class="card-head">
+        <div class="num">07</div>
+        <div>
+          <h2>循环<small>让重复的事交给电脑干</small></h2>
+        </div>
+        <label class="done"><input type="checkbox" data-ch="ch7">已掌握</label>
+      </div>
+      <div class="goal"><b>本章目标</b>会用 for 和 while，知道什么时候该用哪个，能一眼看出死循环。</div>
+
+      <div class="prose">
+        <p><strong>for</strong> 适合"次数已知"的事，<strong>while</strong> 适合"条件满足就一直做"的事。</p>
+      </div>
+      <div class="codebox">
+        <div class="codebar"><span>C++ · for 求和</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int sum = 0;                       // 存结果，一定要先归零
+    for (int i = 1; i &lt;= 100; i++) {    // i 从 1 到 100
+        sum += i;                      // 等于 sum = sum + i
+    }
+    cout &lt;&lt; "1 加到 100 = " &lt;&lt; sum &lt;&lt; endl;
+    return 0;
+}</code></pre>
+      </div>
+      <div class="out">1 加到 100 = 5050</div>
+
+      <div class="prose">
+        <h3>for 的三个部分</h3>
+        <p><span class="mono">for (起点; 继续条件; 每轮变化)</span>：<span class="mono">int i = 1</span> 是起点，<span class="mono">i &lt;= 100</span> 每轮检查一次，<span class="mono">i++</span> 每轮结束时执行。三部分都不能漏。</p>
+
+        <h3>while：更自由的循环</h3>
+      </div>
+      <div class="codebox">
+        <div class="codebar"><span>C++ · 拆数字</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n;
+    cin &gt;&gt; n;
+    int sum = 0;
+    while (n &gt; 0) {          // 只要还有数位就继续
+        sum += n % 10;       // 取出个位
+        n = n / 10;          // 砍掉个位
+    }
+    cout &lt;&lt; "各位数字之和 = " &lt;&lt; sum &lt;&lt; endl;
+    return 0;
+}</code></pre>
+      </div>
+      <div class="out">输入 12345
+各位数字之和 = 15</div>
+
+      <div class="prose">
+        <div class="warn"><b>死循环是怎么来的</b>while 里的变量忘了变化。比如上面那行 <span class="mono">n = n / 10;</span> 如果漏掉，n 永远不变，程序就再也停不下来（按 Ctrl+C 强制结束）。写 while 时先问自己一句：<strong>哪个东西会让条件变成假？</strong></div>
+
+        <h3>break 和 continue</h3>
+        <p><span class="mono">break</span> 直接跳出整个循环；<span class="mono">continue</span> 跳过这一轮剩下的部分，进入下一轮。这俩别滥用，容易把逻辑搞乱。</p>
+      </div>
+
+      <details class="drill">
+        <summary>练一练：两个循环题</summary>
+        <div class="ans">
+          <p><strong>1. 输出所有偶数</strong>（1~50）</p>
+          <div class="codebox"><div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+          <pre><code class="cpp">for (int i = 2; i &lt;= 50; i += 2) cout &lt;&lt; i &lt;&lt; " ";</code></pre></div>
+          <p><strong>2. 猜密码</strong>：让用户反复输入，直到输入 1234 才停下，并统计试了几次。</p>
+          <div class="codebox"><div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+          <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int pwd, times = 0;
+    while (true) {
+        cin &gt;&gt; pwd;
+        times++;
+        if (pwd == 1234) { cout &lt;&lt; "对了，试了 " &lt;&lt; times &lt;&lt; " 次" &lt;&lt; endl; break; }
+        else cout &lt;&lt; "错了，再来" &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre></div>
+        </div>
+      </details>
+    </section>
+
+    <!-- ===== 08 ===== -->
+    <section class="card" id="ch8">
+      <div class="card-head">
+        <div class="num">08</div>
+        <div>
+          <h2>数组<small>把一排盒子排成队伍</small></h2>
+        </div>
+        <label class="done"><input type="checkbox" data-ch="ch8">已掌握</label>
+      </div>
+      <div class="goal"><b>本章目标</b>会声明、读写、遍历数组，能用数组找最大值、求和。</div>
+
+      <div class="prose">
+        <p>数组就是"一排同类型的盒子"，用编号（<strong>下标</strong>）找它们。<strong>下标从 0 开始</strong>，这是最反直觉的一点：5 个元素的数组，编号是 0、1、2、3、4。</p>
+      </div>
+      <div class="codebox">
+        <div class="codebar"><span>C++ · 成绩数组</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int a[5];                        // 5 个整数，下标 0~4
+    cout &lt;&lt; "输入 5 个成绩：";
+    for (int i = 0; i &lt; 5; i++) {
+        cin &gt;&gt; a[i];                 // 读入第 i 个
+    }
+
+    int sum = 0, mx = a[0];
+    for (int i = 0; i &lt; 5; i++) {
+        sum += a[i];
+        if (a[i] &gt; mx) mx = a[i];    // 不断刷新最大值
+    }
+
+    cout &lt;&lt; "总分 " &lt;&lt; sum &lt;&lt; "，最高分 " &lt;&lt; mx &lt;&lt; endl;
+    return 0;
+}</code></pre>
+      </div>
+      <div class="out">输入 5 个成绩：88 92 76 99 85
+总分 440，最高分 99</div>
+
+      <div class="prose">
+        <h3>为什么循环和数组天生一对</h3>
+        <p>因为下标是数字，可以用循环变量 <span class="mono">i</span> 一次搞定所有元素。这就是"批量处理"，也是编程效率的来源。</p>
+
+        <div class="warn"><b>两个必踩的坑</b>
+        ① <span class="mono">int a[5]</span> 的元素是 a[0]~a[4]，写 <span class="mono">a[5]</span> 就越界了，可能直接崩溃或算错，而且<strong>不会报错</strong>；
+        ② 数组大小必须是常量，<span class="mono">int n; cin &gt;&gt; n; int a[n];</span> 在标准 C++ 里是不允许的，直接写个够大的数（比如 100）最稳。</div>
+      </div>
+
+      <details class="drill">
+        <summary>练一练：倒序输出</summary>
+        <div class="ans"><p>输入 5 个数，把它们<strong>倒过来</strong>输出。</p>
+        <p>关键：循环从 <span class="mono">i = 4</span> 开始，条件 <span class="mono">i &gt;= 0</span>，每轮 <span class="mono">i--</span>。</p>
+        <div class="codebox"><div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">for (int i = 4; i &gt;= 0; i--) cout &lt;&lt; a[i] &lt;&lt; " ";</code></pre></div></div>
+      </details>
+    </section>
+
+    <!-- ===== 09 ===== -->
+    <section class="card" id="ch9">
+      <div class="card-head">
+        <div class="num">09</div>
+        <div>
+          <h2>函数<small>把一段代码打包，随叫随用</small></h2>
+        </div>
+        <label class="done"><input type="checkbox" data-ch="ch9">已掌握</label>
+      </div>
+      <div class="goal"><b>本章目标</b>会定义、调用有参有返回值的函数，理解"先声明后使用"。</div>
+
+      <div class="prose">
+        <p>函数 = 名字 + 输入（参数）+ 一段代码 + 输出（返回值）。好处是：写一次，用一百次；而且 main 里只剩一句调用，读起来像在说人话。</p>
+      </div>
+      <div class="codebox">
+        <div class="codebar"><span>C++ · 函数示例</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+// 返回两个整数的和
+int add(int x, int y) {
+    return x + y;
+}
+
+// 判断是否为质数
+bool isPrime(int n) {
+    if (n &lt; 2) return false;
+    for (int i = 2; i * i &lt;= n; i++) {
+        if (n % i == 0) return false;   // 找到因数，立刻返回假
+    }
+    return true;
+}
+
+int main() {
+    cout &lt;&lt; add(3, 5) &lt;&lt; endl;
+
+    for (int n = 2; n &lt;= 30; n++) {
+        if (isPrime(n)) cout &lt;&lt; n &lt;&lt; " ";
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre>
+      </div>
+      <div class="out">8
+2 3 5 7 11 13 17 19 23 29</div>
+
+      <div class="prose">
+        <h3>读函数的三步</h3>
+        <ul>
+          <li>看最前面：<span class="mono">int</span> 说明它返回一个整数，<span class="mono">bool</span> 说明返回真假，<span class="mono">void</span> 说明什么都不返回。</li>
+          <li>看括号里：有几个参数、分别是什么类型。</li>
+          <li>看 <span class="mono">return</span>：一旦执行，函数立刻结束，后面的代码不再运行。</li>
+        </ul>
+
+        <div class="warn"><b>常见错误</b>函数定义写在 <span class="mono">main</span> 后面却没提前声明 → 报错"未声明标识符"。解决办法：把函数整个挪到 main 前面（新手最省事），或在 main 前面写一行 <span class="mono">int add(int x, int y);</span> 当"预告"。</div>
+
+        <div class="tip"><b>为什么写成 <span class="mono">i * i &lt;= n</span></b>不用 <span class="mono">i &lt;= n</span>？因为一个数如果有因数，必然有一个 ≤ 它的平方根，所以只试到根号就够了，速度快很多。这种"少做无用功"的思路，就是算法意识。</div>
+      </div>
+
+      <details class="drill">
+        <summary>练一练：自己写两个函数</summary>
+        <div class="ans">
+          <p><strong>1.</strong> <span class="mono">int max3(int a, int b, int c)</span> 返回三个数中最大的。</p>
+          <p><strong>2.</strong> <span class="mono">double avg(int a, int b)</span> 返回两个数的平均数（注意要返回小数）。</p>
+          <div class="codebox"><div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+          <pre><code class="cpp">int max3(int a, int b, int c) {
+    int m = a;
+    if (b &gt; m) m = b;
+    if (c &gt; m) m = c;
+    return m;
+}
+
+double avg(int a, int b) {
+    return (a + b) / 2.0;      // 除以 2.0 而不是 2
+}</code></pre></div>
+        </div>
+      </details>
+    </section>
+
+    <!-- ===== 10 ===== -->
+    <section class="card" id="ch10">
+      <div class="card-head">
+        <div class="num">10</div>
+        <div>
+          <h2>综合实战<small>三个能拿出去炫耀的小项目</small></h2>
+        </div>
+        <label class="done"><input type="checkbox" data-ch="ch10">已掌握</label>
+      </div>
+      <div class="goal"><b>本章目标</b>把前面所有章节拼起来，独立完成 3 个完整程序。</div>
+
+      <div class="prose">
+        <h3>项目一：猜数字（循环 + 判断 + 随机数）</h3>
+        <p>电脑想一个 1~100 的数，你反复猜，它会提示"太大"或"太小"，直到猜对。</p>
+      </div>
+      <div class="codebox">
+        <div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+#include &lt;cstdlib&gt;
+#include &lt;ctime&gt;
+using namespace std;
+
+int main() {
+    srand(time(0));                  // 用时间当种子，每次运行结果不同
+    int secret = rand() % 100 + 1;   // 1~100 的随机数
+    int guess, times = 0;
+
+    cout &lt;&lt; "我想了一个 1~100 的数，你来猜：" &lt;&lt; endl;
+    while (true) {
+        cin &gt;&gt; guess;
+        times++;
+        if (guess &gt; secret)      cout &lt;&lt; "太大了" &lt;&lt; endl;
+        else if (guess &lt; secret) cout &lt;&lt; "太小了" &lt;&lt; endl;
+        else {
+            cout &lt;&lt; "猜对了！你用了 " &lt;&lt; times &lt;&lt; " 次。" &lt;&lt; endl;
+            break;
+        }
+    }
+    return 0;
+}</code></pre>
+      </div>
+
+      <div class="prose">
+        <h3>项目二：九九乘法表（嵌套循环 + 格式化）</h3>
+      </div>
+      <div class="codebox">
+        <div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    for (int i = 1; i &lt;= 9; i++) {          // 外层：行
+        for (int j = 1; j &lt;= i; j++) {      // 内层：列，只到 i
+            cout &lt;&lt; j &lt;&lt; "*" &lt;&lt; i &lt;&lt; "=" &lt;&lt; i * j &lt;&lt; "\t";
+        }
+        cout &lt;&lt; endl;                        // 一行结束换行
+    }
+    return 0;
+}</code></pre>
+      </div>
+      <div class="out">1*1=1
+1*2=2   2*2=4
+1*3=3   2*3=6   3*3=9
+…（共 9 行）</div>
+      <div class="prose">
+        <p><span class="mono">"\t"</span> 是制表符，用来对齐列。试试把它换成空格，看看表格会变成什么样。</p>
+
+        <h3>项目三：成绩统计（数组 + 函数 + 小数）</h3>
+      </div>
+      <div class="codebox">
+        <div class="codebar"><span>C++</span><button class="copy">复制</button></div>
+        <pre><code class="cpp">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    const int N = 5;
+    int score[N];
+    int sum = 0, mx = 0, mn = 100;
+
+    cout &lt;&lt; "输入 " &lt;&lt; N &lt;&lt; " 个成绩：" &lt;&lt; endl;
+    for (int i = 0; i &lt; N; i++) {
+        cin &gt;&gt; score[i];
+        sum += score[i];
+        if (score[i] &gt; mx) mx = score[i];
+        if (score[i] &lt; mn) mn = score[i];
+    }
+
+    cout &lt;&lt; "平均分：" &lt;&lt; (double)sum / N &lt;&lt; endl;
+    cout &lt;&lt; "最高分：" &lt;&lt; mx &lt;&lt; "  最低分：" &lt;&lt; mn &lt;&lt; endl;
+    return 0;
+}</code></pre>
+      </div>
+
+      <details class="drill">
+        <summary>进阶挑战（做出来就算出师了）</summary>
+        <div class="ans">
+          <p><strong>1.</strong> 猜数字游戏加限制：最多猜 7 次，超了就显示正确答案。</p>
+          <p><strong>2.</strong> 输出 1~100 里所有的质数，每行 10 个。</p>
+          <p><strong>3.</strong> 输入一个整数，判断它是不是回文数（正着读倒着读一样，比如 1221）。提示：用 while 把这个数"倒过来"存到另一个变量里，再比较。</p>
+        </div>
+      </details>
+    </section>
+
+    <!-- ===== 11 ===== -->
+    <section class="card" id="ch11">
+      <div class="card-head">
+        <div class="num">附</div>
+        <div>
+          <h2>报错自查 + 8 周计划<small>卡住的时候翻这里</small></h2>
+        </div>
+        <label class="done"><input type="checkbox" data-ch="ch11">已掌握</label>
+      </div>
+      <div class="goal"><b>本章目标</b>遇到报错能自己定位，按计划把 10 章学完。</div>
+
+      <div class="prose">
+        <h3>报错自查表</h3>
+        <table class="tbl">
+          <tr><th>报错 / 现象</th><th>最可能的原因</th></tr>
+          <tr><td><span class="mono">expected ';' before …</span></td><td>上一行末尾漏了分号，或写成了中文分号</td></tr>
+          <tr><td><span class="mono">'xxx' was not declared</span></td><td>变量/函数名拼错，或函数定义写在 main 后面没声明</td></tr>
+          <tr><td><span class="mono">'iostream' file not found</span></td><td>尖括号被打成了中文括号，或 <span class="mono">#include</span> 拼错</td></tr>
+          <tr><td>编译通过但结果不对</td><td>整数除法、忘记初始化、循环条件差 1、下标越界</td></tr>
+          <tr><td>程序一直不结束</td><td>死循环，检查 while 里的变量有没有变化</td></tr>
+          <tr><td>黑窗口一闪就关</td><td>程序正常结束，用 Ctrl+F5 或在末尾加 <span class="mono">cin.get();</span></td></tr>
+          <tr><td>输入中文后乱码</td><td>编码问题，把文件存成 UTF-8，或在命令行执行 <span class="mono">chcp 65001</span></td></tr>
+        </table>
+
+        <h3>8 周学习计划</h3>
+        <table class="tbl">
+          <tr><th>周</th><th>内容</th><th>过关标准</th></tr>
+          <tr><td>第 1 周</td><td>第 1~2 章</td><td>能独立装好环境并输出三行文字</td></tr>
+          <tr><td>第 2 周</td><td>第 3~4 章</td><td>能写一个"输入两个数、输出和"的程序</td></tr>
+          <tr><td>第 3 周</td><td>第 5 章 + 复习</td><td>能解释 7/2 为什么是 3</td></tr>
+          <tr><td>第 4 周</td><td>第 6 章</td><td>能写成绩等级 + 闰年判断</td></tr>
+          <tr><td>第 5 周</td><td>第 7 章</td><td>能自己写出 1 加到 100</td></tr>
+          <tr><td>第 6 周</td><td>第 8 章</td><td>能找出数组里最大/最小值</td></tr>
+          <tr><td>第 7 周</td><td>第 9 章</td><td>能自己写 isPrime 并解释每行</td></tr>
+          <tr><td>第 8 周</td><td>第 10 章</td><td>三个项目全部跑通，挑战题至少做出 1 个</td></tr>
+        </table>
+
+        <h3>自测题（5 题，点选即时判分）</h3>
+      </div>
+
+      <div class="quiz" data-answer="B">
+        <p class="q">1. 下面哪个变量名是合法的？</p>
+        <div class="opts">
+          <button class="opt" data-k="A">A. 2num</button>
+          <button class="opt" data-k="B">B. my_score</button>
+          <button class="opt" data-k="C">C. my-score</button>
+          <button class="opt" data-k="D">D. for</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+
+      <div class="quiz" data-answer="C">
+        <p class="q">2. <span class="mono">7 / 2</span> 的结果是？</p>
+        <div class="opts">
+          <button class="opt" data-k="A">A. 3.5</button>
+          <button class="opt" data-k="B">B. 4</button>
+          <button class="opt" data-k="C">C. 3</button>
+          <button class="opt" data-k="D">D. 1</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+
+      <div class="quiz" data-answer="A">
+        <p class="q">3. <span class="mono">int a[5];</span> 最后一个元素的下标是？</p>
+        <div class="opts">
+          <button class="opt" data-k="A">A. 4</button>
+          <button class="opt" data-k="B">B. 5</button>
+          <button class="opt" data-k="C">C. 1</button>
+          <button class="opt" data-k="D">D. 6</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+
+      <div class="quiz" data-answer="D">
+        <p class="q">4. 哪个写法会让 if 的条件永远为真？</p>
+        <div class="opts">
+          <button class="opt" data-k="A">A. if (x == 5)</button>
+          <button class="opt" data-k="B">B. if (x != 5)</button>
+          <button class="opt" data-k="C">C. if (x &gt; 5)</button>
+          <button class="opt" data-k="D">D. if (x = 5)</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+
+      <div class="quiz" data-answer="B">
+        <p class="q">5. while 循环变成死循环最常见的原因是？</p>
+        <div class="opts">
+          <button class="opt" data-k="A">A. 忘了写 return</button>
+          <button class="opt" data-k="B">B. 循环变量没有被更新</button>
+          <button class="opt" data-k="C">C. 用了 int 而不是 double</button>
+          <button class="opt" data-k="D">D. 忘了加 #include</button>
+        </div>
+        <p class="fb"></p>
+      </div>
+
+      <div class="prose">
+        <p>学完这本手册，你就已经掌握了 C++ 的"主干"：输入输出、变量、判断、循环、数组、函数。接下来可以往这些方向走：<strong>更多算法</strong>（排序、查找、递归）、<strong>结构体与类</strong>、<strong>刷题平台</strong>（洛谷、Codeforces 的入门题）。</p>
+        <p>最后一句：<strong>看懂不等于会写，会写不等于能讲清楚。</strong>能对着屏幕把 isPrime 的每一行讲给同学听，你就是真的会了。</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<footer>初一 C++ 自学手册 · 纯前端单文件 · 进度保存在本机浏览器</footer>
+<button class="totop" id="totop" title="回到顶部">↑</button>
+
+<script>
+(function () {
+  // ---------- 代码高亮 ----------
+  function esc(s) {
+    return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+  var KW = 'int|double|float|char|bool|void|long|short|unsigned|auto|const|static|struct|class|string|size_t|using|namespace|return|if|else|for|while|do|switch|case|default|break|continue|true|false|main|include|cin|cout|endl|srand|rand|printf|getline';
+  var RE = new RegExp(
+    '(\\/\\/[^\\n]*|\\/\\*[\\s\\S]*?\\*\\/)|("(?:\\\\.|[^"\\\\])*"|\'(?:\\\\.|[^\'\\\\])*\')|(#[\\s\\w]*)|(\\b\\d+(?:\\.\\d+)?\\b)|(\\b(?:' + KW + ')\\b)', 'g'
+  );
+  function highlight(raw) {
+    return esc(raw).replace(RE, function (m, com, str, pre, num, kw) {
+      if (com) return '<span class="c-com">' + com + '</span>';
+      if (str) return '<span class="c-str">' + str + '</span>';
+      if (pre) return '<span class="c-pre">' + pre + '</span>';
+      if (num) return '<span class="c-num">' + num + '</span>';
+      if (kw) return '<span class="c-kw">' + kw + '</span>';
+      return m;
+    });
+  }
+  document.querySelectorAll('pre code').forEach(function (el) {
+    var raw = el.textContent.replace(/^\n+/, '').replace(/\s+$/, '');
+    el.dataset.raw = raw;
+    el.innerHTML = el.classList.contains('cpp') ? highlight(raw) : esc(raw);
+  });
+
+  // ---------- 复制按钮 ----------
+  document.querySelectorAll('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var box = btn.closest('.codebox');
+      var code = box ? box.querySelector('code') : null;
+      var text = code ? code.dataset.raw : '';
+      var done = function () {
+        btn.textContent = '已复制 ✓';
+        btn.classList.add('ok');
+        setTimeout(function () { btn.textContent = '复制'; btn.classList.remove('ok'); }, 1600);
+      };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { legacy(text, done); });
+      } else {
+        legacy(text, done);
+      }
+    });
+  });
+  function legacy(text, done) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+
+  // ---------- 学习进度 ----------
+  var boxes = document.querySelectorAll('[data-ch]');
+  var total = boxes.length;
+  var bar = document.getElementById('progBar');
+  var txt = document.getElementById('progText');
+  function load() {
+    try { return JSON.parse(localStorage.getItem('cpp-progress') || '{}'); } catch (e) { return {}; }
+  }
+  function save(o) {
+    try { localStorage.setItem('cpp-progress', JSON.stringify(o)); } catch (e) {}
+  }
+  function refresh() {
+    var n = 0;
+    boxes.forEach(function (b) { if (b.checked) n++; });
+    bar.style.width = (total ? n / total * 100 : 0) + '%';
+    txt.textContent = n + ' / ' + total + ' 章';
+  }
+  var state = load();
+  boxes.forEach(function (b) {
+    if (state[b.dataset.ch]) b.checked = true;
+    b.addEventListener('change', function () {
+      state[b.dataset.ch] = b.checked;
+      save(state);
+      refresh();
+    });
+  });
+  refresh();
+
+  // ---------- 自测题 ----------
+  document.querySelectorAll('.quiz').forEach(function (q) {
+    var ans = q.dataset.answer;
+    var fb = q.querySelector('.fb');
+    q.querySelectorAll('.opt').forEach(function (o) {
+      o.addEventListener('click', function () {
+        q.querySelectorAll('.opt').forEach(function (x) { x.classList.remove('ok', 'bad'); });
+        if (o.dataset.k === ans) {
+          o.classList.add('ok');
+          fb.textContent = '✓ 回答正确';
+          fb.style.color = '#0a655c';
+        } else {
+          o.classList.add('bad');
+          // 把正确答案也标出来，方便学习
+          q.querySelectorAll('.opt').forEach(function (x) {
+            if (x.dataset.k === ans) x.classList.add('ok');
+          });
+          fb.textContent = '✗ 这题再看看，正确答案已经标绿了';
+          fb.style.color = '#a32239';
+        }
+      });
+    });
+  });
+
+  // ---------- 目录高亮 + 回到顶部 ----------
+  var links = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  var cards = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var idx = cards.indexOf(e.target);
+      links.forEach(function (l) { l.classList.remove('on'); });
+      if (idx >= 0) links[idx].classList.add('on');
+    });
+  }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+  cards.forEach(function (c) { if (c) io.observe(c); });
+
+  var top = document.getElementById('totop');
+  window.addEventListener('scroll', function () {
+    top.classList.toggle('show', window.scrollY > 400);
+  });
+  top.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+})();
+</script>
+</body>
+</html>
